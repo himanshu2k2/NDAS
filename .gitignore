@@ -1,0 +1,18 @@
+.venv/
+.venv312/
+__pycache__/
+*.py[cod]
+.env
+node_modules/
+
+# Local implementation plans (work offline; not committed)
+docs/plans/
+scripts/atlas_seed/
+scripts/atlas_init_log.txt
+scripts/atlas_init_err.txt
+storage/clients/**
+storage/documents/**
+storage/templates/**
+!storage/clients/.gitkeep
+!storage/documents/.gitkeep
+!storage/templates/.gitkeep
