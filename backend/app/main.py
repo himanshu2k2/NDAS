@@ -7,7 +7,6 @@ from app.api.v1.api import api_router
 from app.core.config import settings
 from app.db.mongo import close_db, connect_db
 
-
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     settings.storage_path.mkdir(parents=True, exist_ok=True)
