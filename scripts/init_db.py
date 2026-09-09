@@ -60,6 +60,7 @@ COLLECTIONS = [
     "users",
     "clients",
     "templates",
+    "affidavits",
     "documents",
     "assignments",
     "activity_logs",
@@ -81,13 +82,16 @@ def ensure_indexes(db) -> None:
     db.users.create_index("email", unique=True)
     db.users.create_index([("role", ASCENDING), ("status", ASCENDING)])
 
-    db.clients.create_index("clientCode", unique=True)
-    db.clients.create_index("aadhaarNumber", unique=True)
     db.clients.create_index("mobile")
-    db.clients.create_index([("fullName", TEXT)])
+    db.clients.create_index("aadhar_no", sparse=True)
+    db.clients.create_index([("name", TEXT)])
 
-    db.templates.create_index("templateName", unique=True)
-    db.templates.create_index([("isActive", ASCENDING), ("documentType", ASCENDING)])
+    db.templates.create_index("template_name", unique=True)
+    db.templates.create_index("is_active")
+
+    db.affidavits.create_index([("client_id", ASCENDING), ("created_at", DESCENDING)])
+    db.affidavits.create_index([("template_id", ASCENDING), ("created_at", DESCENDING)])
+    db.affidavits.create_index("status")
 
     db.documents.create_index("documentCode", unique=True)
     db.documents.create_index([("clientId", ASCENDING), ("generatedAt", DESCENDING)])
