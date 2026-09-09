@@ -10,7 +10,7 @@ from app.db.mongo import close_db, connect_db
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     settings.storage_path.mkdir(parents=True, exist_ok=True)
-    for name in ("clients", "documents", "templates"):
+    for name in ("clients", "documents", "templates", "generated"):
         (settings.storage_path / name).mkdir(parents=True, exist_ok=True)
     await connect_db()
     yield
