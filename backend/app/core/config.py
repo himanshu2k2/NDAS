@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     jwt_expire_minutes: int = 480
     storage_root: str = "storage"
     cors_origins: str = "http://localhost:5173"
+    max_template_upload_mb: int = 20
 
     @property
     def cors_origin_list(self) -> list[str]:

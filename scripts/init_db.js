@@ -38,6 +38,7 @@ const COLLECTIONS = [
   "users",
   "clients",
   "templates",
+  "affidavits",
   "documents",
   "assignments",
   "activity_logs",
@@ -67,13 +68,16 @@ async function ensureIndexes(db) {
   await db.collection("users").createIndex({ email: 1 }, { unique: true });
   await db.collection("users").createIndex({ role: 1, status: 1 });
 
-  await db.collection("clients").createIndex({ clientCode: 1 }, { unique: true });
-  await db.collection("clients").createIndex({ aadhaarNumber: 1 }, { unique: true });
   await db.collection("clients").createIndex({ mobile: 1 });
-  await db.collection("clients").createIndex({ fullName: "text" });
+  await db.collection("clients").createIndex({ aadhar_no: 1 }, { sparse: true });
+  await db.collection("clients").createIndex({ name: "text" });
 
-  await db.collection("templates").createIndex({ templateName: 1 }, { unique: true });
-  await db.collection("templates").createIndex({ isActive: 1, documentType: 1 });
+  await db.collection("templates").createIndex({ template_name: 1 }, { unique: true });
+  await db.collection("templates").createIndex({ is_active: 1 });
+
+  await db.collection("affidavits").createIndex({ client_id: 1, created_at: -1 });
+  await db.collection("affidavits").createIndex({ template_id: 1, created_at: -1 });
+  await db.collection("affidavits").createIndex({ status: 1 });
 
   await db.collection("documents").createIndex({ documentCode: 1 }, { unique: true });
   await db.collection("documents").createIndex({ clientId: 1, generatedAt: -1 });

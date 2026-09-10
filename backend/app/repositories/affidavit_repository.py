@@ -1,18 +1,16 @@
 from typing import Optional
 
-from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
-from app.queries import kidney_affidavit_queries as q
+from app.queries import affidavit_queries as q
 
-COLLECTION = "kidney_affidavits"
+COLLECTION = "affidavits"
 
 
-class KidneyAffidavitRepository:
+class AffidavitRepository:
 
     @staticmethod
-    async def create(db: AsyncIOMotorDatabase, data: dict) -> dict:
-        doc = q.new_affidavit_document(data)
+    async def create(db: AsyncIOMotorDatabase, doc: dict) -> dict:
         result = await db[COLLECTION].insert_one(doc)
         return await db[COLLECTION].find_one({"_id": result.inserted_id})
 
@@ -25,20 +23,19 @@ class KidneyAffidavitRepository:
 
     @staticmethod
     async def find_list(
-        db: AsyncIOMotorDatabase, search: str | None, skip: int, limit: int
+        db: AsyncIOMotorDatabase,
+        search: str | None,
+        client_id: str | None,
+        template_id: str | None,
+        status: str | None,
+        skip: int,
+        limit: int,
     ) -> tuple[list[dict], int]:
-        filt = q.search_filter(search)
+        filt = q.search_filter(search, client_id, template_id, status)
         cursor = db[COLLECTION].find(filt).sort("_id", -1).skip(skip).limit(limit)
         items = await cursor.to_list(length=limit)
         total = await db[COLLECTION].count_documents(filt)
         return items, total
-
-    @staticmethod
-    async def update(
-        db: AsyncIOMotorDatabase, affidavit_id: str, data: dict
-    ) -> Optional[dict]:
-        await db[COLLECTION].update_one(q.by_id(affidavit_id), q.update_affidavit_document(data))
-        return await db[COLLECTION].find_one(q.by_id(affidavit_id))
 
     @staticmethod
     async def delete(db: AsyncIOMotorDatabase, affidavit_id: str) -> bool:
